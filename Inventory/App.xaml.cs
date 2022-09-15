@@ -1,4 +1,6 @@
-﻿using Inventory.ViewModels;
+﻿
+using Inventory.Store;
+using Inventory.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,9 +16,16 @@ namespace Inventory
     /// </summary>
     public partial class App : Application
     {
+        private readonly NavigationStore _navigationStore = null!;
+
+        public App()
+        {
+            _navigationStore = new();
+        }
         protected override void OnStartup(StartupEventArgs e)
         {
-            MainWindow = new MainWindow() { DataContext = new InputListViewModel() };
+            _navigationStore.CurrentViewModel = new InputListViewModel(_navigationStore);
+            MainWindow = new MainWindow() { DataContext = new MainViewModel(_navigationStore) };
             MainWindow.Show();
             base.OnStartup(e);
         }

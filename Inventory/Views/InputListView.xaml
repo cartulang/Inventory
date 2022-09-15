@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel>
-            <Button Width="80" Margin="0,0,0,20" HorizontalAlignment="Right">Add</Button>
+            <Button Width="80" Margin="0,0,0,20" HorizontalAlignment="Right" Command="{Binding NavigateToInputViewCommand}">Add</Button>
             <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Inputs}" IsReadOnly="True" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Width="130" Binding="{Binding Id}"  />

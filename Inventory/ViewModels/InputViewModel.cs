@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Inventory.Models;
+using Inventory.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,9 @@ using System.Windows;
 
 namespace Inventory.ViewModels
 {
-    public partial class InputViewModel : ObservableObject
+    partial class InputViewModel : ViewModelBase
     {
+        private NavigationStore _navigationStore = null!;
         private readonly Input _input = null!;
         private readonly DeviceStatusViewModel _deviceStatusList;
         public IEnumerable<DeviceStatus> DeviceStatusSelection => _deviceStatusList.DeviceStatusList;
@@ -25,11 +27,12 @@ namespace Inventory.ViewModels
         [ObservableProperty]
         private string _deviceStatus = null!;
 
-        public InputViewModel()
+        public InputViewModel(NavigationStore navigationStore)
         {
             _input = new();
             _deviceStatusList = new();
             SubmitCommand = new AsyncRelayCommand(Submit);
+            _navigationStore = navigationStore;
         }
 
         public IAsyncRelayCommand SubmitCommand { get; }
@@ -48,19 +51,24 @@ namespace Inventory.ViewModels
             _input.DeviceStatus = _deviceStatus;
             _input.LastUser = _lastUser.Trim();
             _input.Date = String.Format("{0}, {1}", Date, Time);
-
+            /*await _input.AddInput(_input);*/
             bool isSubmitSuccess = await _input.AddInput(_input);
 
-            if(!isSubmitSuccess)
+            if (!isSubmitSuccess)
             {
                 MessageBox.Show("Error submitting.");
+                return;
             }
+            _deviceName = "";
+            _lastUser = "";
+            _deviceStatus = "";
+            Cancel();
         }
 
         [RelayCommand]
         private void Cancel()
         {
-
+            _navigationStore.CurrentViewModel = new InputListViewModel(_navigationStore);
         }
 
         private bool ValidateInputs()

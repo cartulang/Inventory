@@ -21,9 +21,9 @@ namespace Inventory.Models
             _inventoryService = new();
         }
 
-        public List<Input> GetInventory()
+        public async Task<List<Input>> GetInventory()
         {
-            return _inventoryService.GetInventory();
+            return await _inventoryService.GetInventory();
         }
 
         public async Task<bool> AddInput(Input input)

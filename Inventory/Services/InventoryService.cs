@@ -15,12 +15,13 @@ namespace Inventory.Services
     {
         private RestClient _restClient = null!;
         private readonly string baseUrl = "https://sheetdb.io/api/v1/gf2ahqr80s8lq";
-        public List<Input> GetInventory()
+        public async Task<List<Input>> GetInventory()
         {
             _restClient = new (baseUrl);
             var request = new RestRequest();
-            var response =  _restClient.GetAsync(request).Result.Content;
-            var json = JsonConvert.DeserializeObject<List<Input>>(response);
+            var response = await _restClient.GetAsync(request);
+            string? content = response.Content;
+            var json = JsonConvert.DeserializeObject<List<Input>>(content);
             return json;
         }
 
