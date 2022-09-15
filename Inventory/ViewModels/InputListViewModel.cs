@@ -13,7 +13,7 @@ namespace Inventory.ViewModels
 {
     partial class InputListViewModel : ViewModelBase
     {
-        private NavigationStore _navigationStore = null!;
+        private readonly NavigationStore _navigationStore = null!;
         private readonly Input? _input = null!;
         [ObservableProperty]
         private ObservableCollection<Input>? _inputs = null!;

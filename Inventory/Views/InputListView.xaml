@@ -7,17 +7,19 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel>
-            <Button Width="80" Margin="0,0,0,20" HorizontalAlignment="Right" Command="{Binding NavigateToInputViewCommand}">Add</Button>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Inputs}" IsReadOnly="True" >
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Width="130" Binding="{Binding Id}"  />
-                    <DataGridTextColumn Header="Device" Width="180" Binding="{Binding DeviceName}"  />
-                    <DataGridTextColumn Header="Status"  Binding="{Binding DeviceStatus}"  Width="140" />
-                    <DataGridTextColumn Header="Last User"  Binding="{Binding LastUser}" Width="100"  />
-                    <DataGridTextColumn Header="Date"  Binding="{Binding Date}"   />
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+            <Button Grid.Row="0" Width="80" Height="30" Margin="0,0,0,20" HorizontalAlignment="Right" Command="{Binding NavigateToInputViewCommand}">Add</Button>
+        <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Inputs}" IsReadOnly="True" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Width="130" Binding="{Binding Id}"  />
+                <DataGridTextColumn Header="Device" Width="180" Binding="{Binding DeviceName}"  />
+                <DataGridTextColumn Header="Status"  Binding="{Binding DeviceStatus}"  Width="130" />
+                <DataGridTextColumn Header="Last User"  Binding="{Binding LastUser}" Width="100"  />
+                <DataGridTextColumn Header="Date"  Binding="{Binding Date}"   />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
