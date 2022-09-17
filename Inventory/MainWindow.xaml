@@ -9,11 +9,17 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="30">
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type viewmodels:InputListViewModel}">
-                <views:InputListView />
+            <DataTemplate DataType="{x:Type viewmodels:TransactionsListViewModel}">
+                <views:TransactionsListView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:InputViewModel}">
-                <views:InputView />
+            <DataTemplate DataType="{x:Type viewmodels:DeviceListViewModel}">
+                <views:DeviceListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:AddDeviceViewModel}">
+                <views:AddDeviceView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
+                <views:HomeView />
             </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}" />

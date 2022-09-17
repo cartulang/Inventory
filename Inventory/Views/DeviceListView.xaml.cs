@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Inventory.Views
 {
     /// <summary>
-    /// Interaction logic for InputListView.xaml
+    /// Interaction logic for DeviceListView.xaml
     /// </summary>
-    public partial class InputListView : UserControl
+    public partial class DeviceListView : UserControl
     {
-        public InputListView()
+        public DeviceListView()
         {
             InitializeComponent();
         }
