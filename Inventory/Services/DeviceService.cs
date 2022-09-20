@@ -1,5 +1,8 @@
-﻿using Inventory.Dto;
+﻿
+using Inventory.DbContexts;
+using Inventory.Dto;
 using Inventory.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -7,39 +10,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Inventory.Services
 {
     public class DeviceService
     {
-        private RestClient _restClient = null!;
-        private readonly string _baseUrl = "http://localhost:8001/device";
-
-        public async Task<IEnumerable<Device>> GetAllDevice()
+        private readonly DeviceInventoryContext _context = null!;
+        public DeviceService()
         {
-            _restClient = new(_baseUrl);
-            var request = new RestRequest();
-            var response = await _restClient.GetAsync(request);
-            var deviceList = JsonConvert.DeserializeObject<List<Device>>(response?.Content);
-            return deviceList;
+            _context = new();
         }
 
-        public async Task<bool> AddDevice(DeviceDto device)
+
+        public async Task<List<Device>> GetAllDevice()
         {
-            _restClient = new(_baseUrl);
-            var request = new RestRequest();
-            request.AddBody(device);
-            
             try
             {
-                var response = await _restClient.PostAsync(request);
-                return true;
-            } 
-            catch(Exception)
+                var devices = await _context.Devices.ToListAsync();
+                return devices.OrderByDescending(x => x.Id).ToList();
+
+            }
+
+            catch
             {
+                MessageBox.Show("Error fetching devices.");
+                return new List<Device>();
+            }
+        }
+
+        public async Task<bool> AddDevice(Device device)
+        {
+            try
+            {
+                await _context.AddAsync(device);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            catch (Exception)
+            {
+                MessageBox.Show("Error adding device.");
                 return false;
             }
-            
+        }
+
+        public async Task UpdateDevice(Device device)
+        {
+            try
+            {
+                var currentDevice = await _context.Devices.Where(x => x.Id == device.Id).FirstOrDefaultAsync();
+
+                currentDevice.Status = device.Status;
+                currentDevice.DeviceName = device.DeviceName;
+                currentDevice.Quantity = device.Quantity;
+
+                await _context.SaveChangesAsync();
+
+                MessageBox.Show("Device updated!");
+            }
+
+            catch(Exception)
+            {
+                MessageBox.Show("Error updating device.");
+            }
         }
     }
 }

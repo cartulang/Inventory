@@ -21,7 +21,7 @@ namespace Inventory.ViewModels
         [RelayCommand]
         private void ToTransactions()
         {
-            _navigationStore.CurrentViewModel = new TransactionsListViewModel(_navigationStore);
+       /*     _navigationStore.CurrentViewModel = new TransactionsListViewModel(_navigationStore);*/
         }
 
         [RelayCommand]

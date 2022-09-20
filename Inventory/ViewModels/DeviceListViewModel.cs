@@ -15,31 +15,23 @@ namespace Inventory.ViewModels
 {
     public partial class DeviceListViewModel : ViewModelBase
     {
-        BackgroundWorker bgWork = new();
+        private readonly BackgroundWorker bgWork = new();
         private readonly NavigationStore _navigationStore = null!;
-        private readonly Device _device = null!;
+        private readonly DeviceStore _deviceStore = null!;
         private IEnumerable<Device> _allDevice = null!;
 
         [ObservableProperty]
         private ObservableCollection<Device> _deviceList = null!;
 
         [ObservableProperty]
-        private string _id = null!;
-
-        [ObservableProperty]
-        private string _deviceName = null!;
-
-        [ObservableProperty]
-        private string _deviceStatus = null!;
-
-        [ObservableProperty]
-        private int _quantity;
+        [NotifyCanExecuteChangedFor(nameof(ToUpdateDeviceCommand))]
+        private Device _selectedDevice = null!;
 
         public DeviceListViewModel(NavigationStore navigationStore)
         {
-            _device = new();
-            _navigationStore = navigationStore;
+            _deviceStore = new();
             _deviceList = new();
+            _navigationStore = navigationStore;
             bgWork.DoWork += FetchDeviceList;
             bgWork.RunWorkerCompleted += DoneFetching;
             bgWork.RunWorkerAsync();
@@ -57,6 +49,13 @@ namespace Inventory.ViewModels
             _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
         }
 
+        [RelayCommand(CanExecute = nameof(CanUpdateDevice))]
+        private void ToUpdateDevice()
+        {
+            _navigationStore.CurrentViewModel = new UpdateDeviceViewModel(_navigationStore, _selectedDevice);
+        }
+
+        private bool CanUpdateDevice() => _selectedDevice is not null;
 
         private void DoneFetching(object? sender, RunWorkerCompletedEventArgs e)
         {
@@ -68,7 +67,7 @@ namespace Inventory.ViewModels
 
         private void FetchDeviceList(object? sender, DoWorkEventArgs e)
         {
-            _allDevice = _device.GetAllDevice();
+            _allDevice = _deviceStore.GetAllDevice().Result;
         }
     }
 }

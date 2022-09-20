@@ -14,13 +14,13 @@ namespace Inventory.Services
     {
         private RestClient _restClient = null!;
         private readonly string _baseUrl = "http://localhost:8001/transaction";
-        public async Task<List<DeviceTransaction>> GetAllTransactions()
+/*        public async Task<List<DeviceTransaction>> GetAllTransactions()
         {
             _restClient = new(_baseUrl);
             var request = new RestRequest();
             var response = await _restClient.GetAsync(request);
             var transactionList = JsonConvert.DeserializeObject<List<DeviceTransaction>>(response?.Content);
             return transactionList;
-        }
+        }*/
     }
 }

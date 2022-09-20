@@ -17,26 +17,26 @@ namespace Inventory.ViewModels
     partial class AddDeviceViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore = null!;
-        private readonly Device _device = null!;
+        private readonly DeviceStore _deviceStore = null!;
         private readonly DeviceDto _deviceDto = null!;
 
         [ObservableProperty]
-        private List<string> _deviceStatusSelection = new() 
+        private List<string> _deviceStatusSelection = new()
         { "Available", "In-Use", "Malfunctioning"};
 
         [ObservableProperty]
         private string _deviceName = null!;
 
         [ObservableProperty]
-        private string _deviceStatus = null!;
+        private int _deviceStatus;
 
         [ObservableProperty]
         private int _quantity = 1;
 
         public AddDeviceViewModel(NavigationStore navigationStore)
         {
-            _device = new();
             _deviceDto = new();
+            _deviceStore = new();
             SubmitCommand = new AsyncRelayCommand(Submit);
             _navigationStore = navigationStore;
         }
@@ -50,19 +50,26 @@ namespace Inventory.ViewModels
                 return;
             }
 
-            _deviceDto.DeviceName = _deviceName.Trim();
-            _deviceDto.DeviceStatus = _deviceStatus;
-            _deviceDto.Quantity = _quantity;
 
-            var isSuccess = await _device.AddDevice(_deviceDto);
 
-            if (!isSuccess)
+
+            /*_deviceDto.DeviceName = _deviceName;
+            _deviceDto.Status = _deviceStatusSelection[_deviceStatus];
+            _deviceDto.Quantity = _quantity;*/
+
+            var device = new Device()
             {
-                MessageBox.Show("Error while adding new device.");
-                return;
-            }
+                DeviceName = _deviceName,
+                Status = _deviceStatusSelection[_deviceStatus],
+                Quantity = _quantity
+            };
 
-            MessageBox.Show("Device added!");
+            await _deviceStore.AddDevice(device);
+
+    /*        if (!isSuccess)
+            {
+                return;
+            }*/
             Cancel();
         }
 
@@ -74,13 +81,13 @@ namespace Inventory.ViewModels
 
         private bool ValidateInputs()
         {
-            if (String.IsNullOrEmpty(_deviceStatus) || String.IsNullOrEmpty(_deviceName))
+            if (String.IsNullOrEmpty(_deviceName))
             {
                 MessageBox.Show("All input fields are required.");
                 return false;
             }
 
-            if(_quantity <= 0)
+            if (_quantity <= 0)
             {
                 MessageBox.Show("Quantity must be greater than zero.");
                 return false;

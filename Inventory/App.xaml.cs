@@ -1,4 +1,5 @@
 ﻿
+using Inventory.Models;
 using Inventory.Store;
 using Inventory.ViewModels;
 using System;

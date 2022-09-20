@@ -14,7 +14,7 @@ namespace Inventory.ViewModels
 {
     partial class TransactionsListViewModel : ViewModelBase
     {
-        private readonly BackgroundWorker bgWork = new();
+       /* private readonly BackgroundWorker bgWork = new();
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceTransaction _transaction = null!;
         private IEnumerable<DeviceTransaction> _allTransactions = null!;
@@ -56,6 +56,6 @@ namespace Inventory.ViewModels
         private void ToHomeView()
         {
             _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
-        }
+        }*/
     }
 }

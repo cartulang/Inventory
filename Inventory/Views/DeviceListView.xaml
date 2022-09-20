@@ -20,15 +20,16 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{DynamicResource MaterialDesignToolButton}" Margin="20,0" Command="{Binding ToHomeCommand}">Home</Button>
+                    <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding ToHomeCommand}">Home</Button>
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToUpdateDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="20,0">Update</Button>
                     <Button Command="{Binding ToAddDeviceCommand}">Add</Button>
                 </StackPanel>
             </Grid>
-            <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding DeviceList}" IsReadOnly="True" >
+            <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding DeviceList}" IsReadOnly="True" SelectedItem="{Binding SelectedDevice, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Width="230" Binding="{Binding Id}"  />
                     <DataGridTextColumn Header="Device" Width="180" Binding="{Binding DeviceName}"  />
-                    <DataGridTextColumn Header="Status"  Binding="{Binding DeviceStatus}"  Width="130" />
+                    <DataGridTextColumn Header="Status"  Binding="{Binding Status}"  Width="130" />
                     <DataGridTextColumn Header="In Stock"  Binding="{Binding Quantity}" Width="100"  />
                 </DataGrid.Columns>
             </DataGrid>
