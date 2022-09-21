@@ -18,6 +18,8 @@ namespace Inventory.DbContexts
         }
 
         public virtual DbSet<Device> Devices { get; set; } = null!;
+        public virtual DbSet<DeviceTransaction> DeviceTransactions { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,11 +37,41 @@ namespace Inventory.DbContexts
                 entity.ToTable("devices");
 
                 entity.Property(e => e.DeviceName)
-                    .HasMaxLength(256)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Status)
-                    .HasMaxLength(16)
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<DeviceTransaction>(entity =>
+            {
+                entity.ToTable("device_transactions");
+
+                entity.Property(e => e.Date)
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DeviceName)
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Operation)
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(32)
                     .IsUnicode(false);
             });
 

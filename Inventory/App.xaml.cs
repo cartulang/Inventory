@@ -25,7 +25,7 @@ namespace Inventory
         }
         protected override void OnStartup(StartupEventArgs e)
         {
-            _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
+            _navigationStore.CurrentViewModel = new LoginViewModel(_navigationStore);
             MainWindow = new MainWindow() { DataContext = new MainViewModel(_navigationStore) };
             MainWindow.Show();
             base.OnStartup(e);

@@ -24,6 +24,9 @@
             <DataTemplate DataType="{x:Type viewmodels:UpdateDeviceViewModel}">
                 <views:UpdateDeviceView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
+                <views:LoginView />
+            </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>

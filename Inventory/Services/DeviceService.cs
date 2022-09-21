@@ -1,7 +1,6 @@
-﻿
-using Inventory.DbContexts;
-using Inventory.Dto;
+﻿using Inventory.DbContexts;
 using Inventory.Models;
+using Inventory.Store;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
@@ -17,9 +16,11 @@ namespace Inventory.Services
     public class DeviceService
     {
         private readonly DeviceInventoryContext _context = null!;
+        private readonly DeviceTransactionStore _transactionStore = null!;
         public DeviceService()
         {
             _context = new();
+            _transactionStore = new();
         }
 
 
@@ -29,7 +30,6 @@ namespace Inventory.Services
             {
                 var devices = await _context.Devices.ToListAsync();
                 return devices.OrderByDescending(x => x.Id).ToList();
-
             }
 
             catch
@@ -43,8 +43,16 @@ namespace Inventory.Services
         {
             try
             {
+                var deviceExist = _context.Devices.Where(x => x.DeviceName == device.DeviceName).FirstOrDefault();
+                if (deviceExist is not null)
+                {
+                    MessageBox.Show("Device already exist.");
+                    return false;
+                }
+
                 await _context.AddAsync(device);
                 await _context.SaveChangesAsync();
+                MessageBox.Show("Device added.");
                 return true;
             }
 
@@ -55,7 +63,7 @@ namespace Inventory.Services
             }
         }
 
-        public async Task UpdateDevice(Device device)
+        public async Task<bool> UpdateDevice(Device device)
         {
             try
             {
@@ -68,11 +76,30 @@ namespace Inventory.Services
                 await _context.SaveChangesAsync();
 
                 MessageBox.Show("Device updated!");
+                return true;
             }
 
             catch(Exception)
             {
                 MessageBox.Show("Error updating device.");
+                return false;
+            }
+        }
+
+        public List<Device> DeleteDevice(int deviceId)
+        {
+            try
+            {
+                var device = _context.Devices.Where(_x => _x.Id == deviceId).FirstOrDefault();
+                _context.Devices.Remove(device);
+                _context.SaveChanges();
+                return _context.Devices.ToList();
+            }
+
+            catch(Exception)
+            {
+                MessageBox.Show("Error deleting device.");
+                return new List<Device>();
             }
         }
     }

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Google.Rpc;
-using Inventory.Dto;
 using Inventory.Models;
 using Inventory.Store;
 using System;
@@ -18,7 +17,7 @@ namespace Inventory.ViewModels
     {
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceStore _deviceStore = null!;
-        private readonly DeviceDto _deviceDto = null!;
+        private readonly DeviceTransactionStore _deviceTransactionStore = null!;
 
         [ObservableProperty]
         private List<string> _deviceStatusSelection = new()
@@ -35,10 +34,10 @@ namespace Inventory.ViewModels
 
         public AddDeviceViewModel(NavigationStore navigationStore)
         {
-            _deviceDto = new();
             _deviceStore = new();
-            SubmitCommand = new AsyncRelayCommand(Submit);
+            _deviceTransactionStore = new();
             _navigationStore = navigationStore;
+            SubmitCommand = new AsyncRelayCommand(Submit);
         }
 
         public IAsyncRelayCommand SubmitCommand { get; }
@@ -50,13 +49,6 @@ namespace Inventory.ViewModels
                 return;
             }
 
-
-
-
-            /*_deviceDto.DeviceName = _deviceName;
-            _deviceDto.Status = _deviceStatusSelection[_deviceStatus];
-            _deviceDto.Quantity = _quantity;*/
-
             var device = new Device()
             {
                 DeviceName = _deviceName,
@@ -64,13 +56,13 @@ namespace Inventory.ViewModels
                 Quantity = _quantity
             };
 
-            await _deviceStore.AddDevice(device);
+            var isSuccess = await _deviceTransactionStore.CreateTransaction("Deposit", device) && await _deviceStore.AddDevice(device);
 
-    /*        if (!isSuccess)
+            if (isSuccess)
             {
+                Cancel();
                 return;
-            }*/
-            Cancel();
+            }
         }
 
         [RelayCommand]

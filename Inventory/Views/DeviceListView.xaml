@@ -16,21 +16,20 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-
+                <Button Grid.Column="0" HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Command="{Binding ToHomeCommand}">Home</Button>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding ToHomeCommand}">Home</Button>
+                    <Button Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding DeleteDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0">Delete</Button>
                     <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToUpdateDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="20,0">Update</Button>
                     <Button Command="{Binding ToAddDeviceCommand}">Add</Button>
                 </StackPanel>
             </Grid>
             <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding DeviceList}" IsReadOnly="True" SelectedItem="{Binding SelectedDevice, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Width="230" Binding="{Binding Id}"  />
-                    <DataGridTextColumn Header="Device" Width="180" Binding="{Binding DeviceName}"  />
-                    <DataGridTextColumn Header="Status"  Binding="{Binding Status}"  Width="130" />
-                    <DataGridTextColumn Header="In Stock"  Binding="{Binding Quantity}" Width="100"  />
+                    <DataGridTextColumn Header="Device" Width="250" Binding="{Binding DeviceName}"  />
+                    <DataGridTextColumn Header="Status"  Binding="{Binding Status}"  Width="200" />
+                    <DataGridTextColumn Header="In Stock"  Binding="{Binding Quantity}" Width="130"  />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

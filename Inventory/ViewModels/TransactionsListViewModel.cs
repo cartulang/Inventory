@@ -14,9 +14,9 @@ namespace Inventory.ViewModels
 {
     partial class TransactionsListViewModel : ViewModelBase
     {
-       /* private readonly BackgroundWorker bgWork = new();
+        private readonly BackgroundWorker bgWork = new();
         private readonly NavigationStore _navigationStore = null!;
-        private readonly DeviceTransaction _transaction = null!;
+        private readonly DeviceTransactionStore _deviceTransactionStore = null!;
         private IEnumerable<DeviceTransaction> _allTransactions = null!;
 
         [ObservableProperty]
@@ -24,7 +24,7 @@ namespace Inventory.ViewModels
 
         public TransactionsListViewModel(NavigationStore navigationStore)
         {
-            _transaction = new();
+            _deviceTransactionStore = new();
             _transactions = new();
             _navigationStore = navigationStore;
 
@@ -35,7 +35,7 @@ namespace Inventory.ViewModels
 
         private void DoneFetching(object? sender, RunWorkerCompletedEventArgs e)
         {
-            foreach(var transaction in _allTransactions)
+            foreach (var transaction in _allTransactions)
             {
                 _transactions.Add(transaction);
             }
@@ -43,7 +43,7 @@ namespace Inventory.ViewModels
 
         private void FetchTransactions(object? sender, DoWorkEventArgs e)
         {
-           _allTransactions = _transaction.GetAllTransactions().Result;
+            _allTransactions = Task.Run(_deviceTransactionStore.GetAllTransactions).Result;
         }
 
         [RelayCommand]
@@ -56,6 +56,6 @@ namespace Inventory.ViewModels
         private void ToHomeView()
         {
             _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
-        }*/
+        }
     }
 }

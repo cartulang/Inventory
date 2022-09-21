@@ -18,19 +18,25 @@ namespace Inventory.ViewModels
         private readonly BackgroundWorker bgWork = new();
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceStore _deviceStore = null!;
+        private readonly DeviceTransactionStore _deviceTransactionStore = null!;
         private IEnumerable<Device> _allDevice = null!;
+
+        [ObservableProperty]
+        private bool _isLoading = false;
 
         [ObservableProperty]
         private ObservableCollection<Device> _deviceList = null!;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToUpdateDeviceCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteDeviceCommand))]
         private Device _selectedDevice = null!;
 
         public DeviceListViewModel(NavigationStore navigationStore)
         {
             _deviceStore = new();
             _deviceList = new();
+            _deviceTransactionStore = new();
             _navigationStore = navigationStore;
             bgWork.DoWork += FetchDeviceList;
             bgWork.RunWorkerCompleted += DoneFetching;
@@ -49,25 +55,38 @@ namespace Inventory.ViewModels
             _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
         }
 
-        [RelayCommand(CanExecute = nameof(CanUpdateDevice))]
+        [RelayCommand(CanExecute = nameof(CanUpdateOrDeleteDevice))]
         private void ToUpdateDevice()
         {
             _navigationStore.CurrentViewModel = new UpdateDeviceViewModel(_navigationStore, _selectedDevice);
         }
 
-        private bool CanUpdateDevice() => _selectedDevice is not null;
+        [RelayCommand(CanExecute = nameof(CanUpdateOrDeleteDevice))]
+        private void DeleteDevice()
+        {
+            _deviceTransactionStore.CreateTransaction("Remove", _selectedDevice);
+            _allDevice = _deviceStore.DeleteDevice(_selectedDevice.Id);
+            _deviceList.Clear();
+            ToDeviceList();
+        }
 
+        private bool CanUpdateOrDeleteDevice() => _selectedDevice is not null;
         private void DoneFetching(object? sender, RunWorkerCompletedEventArgs e)
         {
-            foreach (Device device in _allDevice)
-            {
-                _deviceList.Add(device);
-            }
+            ToDeviceList();
         }
 
         private void FetchDeviceList(object? sender, DoWorkEventArgs e)
         {
             _allDevice = _deviceStore.GetAllDevice().Result;
+        }
+
+        private void ToDeviceList()
+        {
+            foreach (Device device in _allDevice)
+            {
+                _deviceList.Add(device);
+            }
         }
     }
 }

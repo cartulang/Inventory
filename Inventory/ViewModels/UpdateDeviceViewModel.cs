@@ -15,6 +15,7 @@ namespace Inventory.ViewModels
         private readonly NavigationStore _navigationStore = null!;
         private readonly Device _device = null!;
         private readonly DeviceStore _deviceStore = null!;
+        private readonly DeviceTransactionStore _deviceTransactionStore = null!;
 
         [ObservableProperty]
         private List<string> _deviceStatusSelection = new()
@@ -39,6 +40,7 @@ namespace Inventory.ViewModels
             _navigationStore = navigationStore;
             _device = device;
             _deviceStore = new();
+            _deviceTransactionStore = new();
             UpdateCommand = new AsyncRelayCommand(UpdateDevice, CanUpdate);
 
             _deviceName = _device.DeviceName;
@@ -48,11 +50,20 @@ namespace Inventory.ViewModels
 
         private async Task UpdateDevice()
         {
-            _device.DeviceName = _deviceName;
-            _device.Status = _deviceStatusSelection[_deviceStatus];
-            _device.Quantity = _quantity;
-            await _deviceStore.UpdateDevice(_device);
-            Cancel();
+            var device = new Device()
+            {
+                Id = _device.Id,
+                DeviceName = _deviceName,
+                Status = _deviceStatusSelection[_deviceStatus],
+                Quantity = _quantity
+            };
+            
+            var isSuccess = await SetUpdateOperation(device) && await _deviceStore.UpdateDevice(device) ;
+
+            if(isSuccess)
+            {
+                Cancel();
+            }
         }
 
         private bool CanUpdate()
@@ -68,6 +79,33 @@ namespace Inventory.ViewModels
         private void Cancel()
         {
             _navigationStore.CurrentViewModel = new DeviceListViewModel(_navigationStore);
+        }
+
+        private async Task<bool> SetUpdateOperation(Device device)
+        {
+            bool isSameName = _deviceName == _device.DeviceName;
+            bool isSameStatus = device.Status == _deviceStatusSelection[_deviceStatusSelection.FindIndex(s => s == _device.Status)];
+            bool isSameQuantity = _quantity == _device.Quantity;
+            List<bool> areSuccess = new();
+
+            if (!isSameName)
+            {
+                areSuccess.Add(await _deviceTransactionStore.CreateTransaction($"Name To {device.DeviceName}", device));
+            }
+
+            if(!isSameStatus)
+            {
+                areSuccess.Add(await _deviceTransactionStore.CreateTransaction($"Status To {device.Status}", device));
+            }
+
+            if(!isSameQuantity)
+            {
+                areSuccess.Add(_quantity > _device.Quantity ? 
+                    await _deviceTransactionStore.CreateTransaction("Restock", device) : 
+                    await _deviceTransactionStore.CreateTransaction("Withdraw", device));
+            }
+
+            return areSuccess.TrueForAll(s => s);
         }
     }
 }
