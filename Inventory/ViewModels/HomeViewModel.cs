@@ -29,5 +29,12 @@ namespace Inventory.ViewModels
         {
             _navigationStore.CurrentViewModel = new DeviceListViewModel(_navigationStore);
         }
+
+        [RelayCommand]
+        private void Logout()
+        {
+            UserStore.IsLoggedIn = false;
+            _navigationStore.CurrentViewModel = new LoginViewModel(_navigationStore);
+        }
     }
 }

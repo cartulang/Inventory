@@ -25,8 +25,9 @@ namespace Inventory.Services
         {
             try
             {
-               var transactions = await _context.DeviceTransactions.ToListAsync();
-                return transactions.OrderByDescending(x => x.Id).ToList();
+                /*         var transactions = await _context.DeviceTransactions.ToListAsync();
+                          return transactions.OrderByDescending(x => x.Id).ToList();*/
+                return new List<DeviceTransaction>();
             }
 
             catch(Exception)
@@ -42,16 +43,17 @@ namespace Inventory.Services
             {
                 DeviceTransaction transaction = new()
                 {
-                    DeviceName = device.DeviceName,
+            /*        DeviceName = device.DeviceName,
                     Date = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss"),
                     Operation = operation,
+                    LastUser = device.LastUser,
                     Quantity = device.Quantity,
-                    DeviceId = device.Id
+                    DeviceId = device.Id*/
                    
                 };
-
+/*
                 await _context.DeviceTransactions.AddAsync(transaction);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();*/
                 return true;
             }
 

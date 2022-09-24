@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Inventory.Models
 {
-    public partial class Device
+    public partial class Operation
     {
         public int Id { get; set; }
-        public string DeviceName { get; set; } = null!;
+        public string OperationName { get; set; } = null!;
     }
 }

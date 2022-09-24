@@ -11,6 +11,8 @@
         <StackPanel Width="200">
             <Label>Device name</Label>
             <TextBox Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged}" />
+            <Label>User</Label>
+            <TextBox Text="{Binding User, UpdateSourceTrigger=PropertyChanged}" />
             <Label>Device status</Label>
             <ComboBox ItemsSource="{Binding DeviceStatusSelection}" SelectedIndex="{Binding DeviceStatus, UpdateSourceTrigger=PropertyChanged}" />
             <Label>Quantity</Label>

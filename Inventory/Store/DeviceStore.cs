@@ -1,4 +1,5 @@
-﻿using Inventory.Models;
+﻿using Inventory.Dtos;
+using Inventory.Models;
 using Inventory.Services;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,14 @@ namespace Inventory.Store
             _deviceService = new();
         }
 
-        public async Task<IEnumerable<Device>> GetAllDevice()
+        public async Task<IEnumerable<DeviceDto>> GetAllDevice()
         {
             return await Task.Run(_deviceService.GetAllDevice);
+        }
+
+        public Device GetDevice(int deviceId)
+        {
+            return _deviceService.GetDevice(deviceId).Result;
         }
 
         public async Task<bool> AddDevice(Device device)
@@ -27,14 +33,19 @@ namespace Inventory.Store
             return await _deviceService.AddDevice(device);
         }
 
-        public async Task<bool> UpdateDevice(Device device)
+        public async Task<bool> WithdrawDevice(DeviceDto deviceDto, int quantity)
         {
-            return await Task.Run(() => _deviceService.UpdateDevice(device));
+            return await Task.Run(() => _deviceService.WithdrawDevice(deviceDto, quantity));
         }
 
-        public IEnumerable<Device> DeleteDevice(int deviceId)
+        public async Task<bool> ReturnDevice(DeviceDto deviceDto, int quantity)
         {
-             return _deviceService.DeleteDevice(deviceId);
+            return await Task.Run(() => _deviceService.ReturnDevice(deviceDto, quantity));
+        }
+
+        public async Task<IEnumerable<DeviceDto>> DeleteDevice(int deviceId)
+        {
+             return await _deviceService.DeleteDevice(deviceId);
         }
     }
 }

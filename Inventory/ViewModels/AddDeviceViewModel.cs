@@ -21,15 +21,22 @@ namespace Inventory.ViewModels
 
         [ObservableProperty]
         private List<string> _deviceStatusSelection = new()
-        { "Available", "In-Use", "Malfunctioning"};
+        { "Working", "Defective", "In-Use" };
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
+        private string _user = null!;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
         private string _deviceName = null!;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
         private int _deviceStatus;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
         private int _quantity = 1;
 
         public AddDeviceViewModel(NavigationStore navigationStore)
@@ -37,8 +44,9 @@ namespace Inventory.ViewModels
             _deviceStore = new();
             _deviceTransactionStore = new();
             _navigationStore = navigationStore;
-            SubmitCommand = new AsyncRelayCommand(Submit);
+            SubmitCommand = new AsyncRelayCommand(Submit, CanSubmit);
         }
+
 
         public IAsyncRelayCommand SubmitCommand { get; }
         private async Task Submit()
@@ -51,9 +59,10 @@ namespace Inventory.ViewModels
 
             var device = new Device()
             {
-                DeviceName = _deviceName,
+   /*             LastUser = _user,
+                DeviceName = _deviceName.Trim(),
                 Status = _deviceStatusSelection[_deviceStatus],
-                Quantity = _quantity
+                Quantity = _quantity*/
             };
 
             var isSuccess = await _deviceTransactionStore.CreateTransaction("Deposit", device) && await _deviceStore.AddDevice(device);
@@ -63,6 +72,11 @@ namespace Inventory.ViewModels
                 Cancel();
                 return;
             }
+        }
+
+        private bool CanSubmit()
+        {
+            return !string.IsNullOrEmpty(_user) && !string.IsNullOrEmpty(_deviceName) && !string.IsNullOrEmpty(_deviceStatusSelection[_deviceStatus]) && !(_quantity < 1);
         }
 
         [RelayCommand]

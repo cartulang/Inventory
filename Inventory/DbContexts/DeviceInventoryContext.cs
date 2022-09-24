@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Inventory.Models;
+using Inventory.Dtos;
 
 namespace Inventory.DbContexts
 {
@@ -19,7 +20,11 @@ namespace Inventory.DbContexts
 
         public virtual DbSet<Device> Devices { get; set; } = null!;
         public virtual DbSet<DeviceTransaction> DeviceTransactions { get; set; } = null!;
+        public virtual DbSet<DevicesStatus> DevicesStatuses { get; set; } = null!;
+        public virtual DbSet<Operation> Operations { get; set; } = null!;
+        public virtual DbSet<Status> Statuses { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<DeviceDto> DevicesDto { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,10 +44,6 @@ namespace Inventory.DbContexts
                 entity.Property(e => e.DeviceName)
                     .HasMaxLength(128)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Status)
-                    .HasMaxLength(32)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<DeviceTransaction>(entity =>
@@ -53,12 +54,29 @@ namespace Inventory.DbContexts
                     .HasMaxLength(128)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DeviceName)
-                    .HasMaxLength(128)
-                    .IsUnicode(false);
+                entity.Property(e => e.OperationId).HasColumnName("OperationID");
+            });
 
-                entity.Property(e => e.Operation)
-                    .HasMaxLength(128)
+            modelBuilder.Entity<DevicesStatus>(entity =>
+            {
+                entity.ToTable("devices_status");
+            });
+
+            modelBuilder.Entity<Operation>(entity =>
+            {
+                entity.ToTable("operation");
+
+                entity.Property(e => e.OperationName)
+                    .HasMaxLength(16)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Status>(entity =>
+            {
+                entity.ToTable("status");
+
+                entity.Property(e => e.StatusName)
+                    .HasMaxLength(16)
                     .IsUnicode(false);
             });
 

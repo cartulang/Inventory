@@ -8,8 +8,9 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel Height="300" Width="200">
-            <Button Margin="0, 20"  Command="{Binding ToDeviceListCommand}">Devices</Button>
-            <Button Command="{Binding ToTransactionsCommand}">Transactions</Button>
+            <Button Command="{Binding ToDeviceListCommand}">Devices</Button>
+            <!--   <Button Style="{DynamicResource MaterialDesignFlatButton}" Margin="0, 20"  Command="{Binding ToTransactionsCommand}">Transactions</Button> -->
+            <Button Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding LogoutCommand}">Logout</Button>
         </StackPanel>
     </Grid>
 </UserControl>

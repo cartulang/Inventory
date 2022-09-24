@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Inventory.Models
 {
-    public partial class DeviceTransaction
+    public partial class DevicesStatus
     {
         public int Id { get; set; }
         public int DeviceId { get; set; }
-        public int OperationId { get; set; }
-        public string Date { get; set; } = null!;
+        public int StatusId { get; set; }
+        public int Quantity { get; set; }
     }
 }

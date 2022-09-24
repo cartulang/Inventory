@@ -18,9 +18,9 @@ namespace Inventory.Views
     /// <summary>
     /// Interaction logic for UpdateDeviceView.xaml
     /// </summary>
-    public partial class UpdateDeviceView : UserControl
+    public partial class WithdrawOrReturnDeviceView : UserControl
     {
-        public UpdateDeviceView()
+        public WithdrawOrReturnDeviceView()
         {
             InitializeComponent();
         }

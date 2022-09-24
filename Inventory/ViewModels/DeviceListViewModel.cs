@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Inventory.Dtos;
 using Inventory.Models;
 using Inventory.Store;
 using System;
@@ -19,18 +20,15 @@ namespace Inventory.ViewModels
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceStore _deviceStore = null!;
         private readonly DeviceTransactionStore _deviceTransactionStore = null!;
-        private IEnumerable<Device> _allDevice = null!;
+        private IEnumerable<DeviceDto> _allDevice = null!;
 
         [ObservableProperty]
-        private bool _isLoading = false;
-
-        [ObservableProperty]
-        private ObservableCollection<Device> _deviceList = null!;
+        private ObservableCollection<DeviceDto> _deviceList = null!;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToUpdateDeviceCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteDeviceCommand))]
-        private Device _selectedDevice = null!;
+        private DeviceDto _selectedDevice = null!;
 
         public DeviceListViewModel(NavigationStore navigationStore)
         {
@@ -58,14 +56,13 @@ namespace Inventory.ViewModels
         [RelayCommand(CanExecute = nameof(CanUpdateOrDeleteDevice))]
         private void ToUpdateDevice()
         {
-            _navigationStore.CurrentViewModel = new UpdateDeviceViewModel(_navigationStore, _selectedDevice);
+            _navigationStore.CurrentViewModel = new WithdrawOrReturnDeviceViewModel(_navigationStore, _selectedDevice);
         }
 
         [RelayCommand(CanExecute = nameof(CanUpdateOrDeleteDevice))]
         private void DeleteDevice()
         {
-            _deviceTransactionStore.CreateTransaction("Remove", _selectedDevice);
-            _allDevice = _deviceStore.DeleteDevice(_selectedDevice.Id);
+            _allDevice = _deviceStore.DeleteDevice(_selectedDevice.Id).Result;
             _deviceList.Clear();
             ToDeviceList();
         }
@@ -83,7 +80,7 @@ namespace Inventory.ViewModels
 
         private void ToDeviceList()
         {
-            foreach (Device device in _allDevice)
+            foreach (DeviceDto device in _allDevice)
             {
                 _deviceList.Add(device);
             }

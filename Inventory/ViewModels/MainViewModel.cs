@@ -10,12 +10,17 @@ namespace Inventory.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private NavigationStore _navigationStore;
+        private readonly NavigationStore _navigationStore;
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
         public MainViewModel(NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            if(!UserStore.IsLoggedIn)
+            {
+                _navigationStore.CurrentViewModel = new LoginViewModel(_navigationStore);
+            }
         }
 
         private void OnCurrentViewModelChanged()
