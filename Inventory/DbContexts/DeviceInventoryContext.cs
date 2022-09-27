@@ -25,6 +25,7 @@ namespace Inventory.DbContexts
         public virtual DbSet<Status> Statuses { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<DeviceDto> DevicesDto { get; set; } = null!;
+        public virtual DbSet<DeviceTransactionDto> DeviceTransactionsDto { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -50,11 +51,13 @@ namespace Inventory.DbContexts
             {
                 entity.ToTable("device_transactions");
 
-                entity.Property(e => e.Date)
-                    .HasMaxLength(128)
+                entity.Property(e => e.CurrentUser)
+                    .HasMaxLength(64)
                     .IsUnicode(false);
 
-                entity.Property(e => e.OperationId).HasColumnName("OperationID");
+                entity.Property(e => e.TransactionDate)
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<DevicesStatus>(entity =>

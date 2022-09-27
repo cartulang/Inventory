@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Inventory.Dtos;
 using Inventory.Models;
 using Inventory.Store;
 using System;
@@ -17,10 +18,10 @@ namespace Inventory.ViewModels
         private readonly BackgroundWorker bgWork = new();
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceTransactionStore _deviceTransactionStore = null!;
-        private IEnumerable<DeviceTransaction> _allTransactions = null!;
+        private IEnumerable<DeviceTransactionDto> _allTransactions = null!;
 
         [ObservableProperty]
-        private ObservableCollection<DeviceTransaction> _transactions = null!;
+        private ObservableCollection<DeviceTransactionDto> _transactions = null!;
 
         public TransactionsListViewModel(NavigationStore navigationStore)
         {

@@ -1,4 +1,5 @@
 ﻿using Inventory.DbContexts;
+using Inventory.Dtos;
 using Inventory.Models;
 using Inventory.Services;
 using System;
@@ -18,15 +19,9 @@ namespace Inventory.Store
             _deviceTransactionService = new();
         }
 
-        public async Task<IEnumerable<DeviceTransaction>> GetAllTransactions()
+        public async Task<IEnumerable<DeviceTransactionDto>> GetAllTransactions()
         {
             return await Task.Run(_deviceTransactionService.GetAllTransactions);
         }
-
-        public Task<bool> CreateTransaction(string operation, Device device)
-        {
-           return Task.Run(() => _deviceTransactionService.CreateTransaction(operation, device));
-        }
-
     }
 }

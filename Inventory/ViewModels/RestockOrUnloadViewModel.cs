@@ -1,11 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Google.Rpc;
+using Inventory.Dtos;
 using Inventory.Models;
 using Inventory.Store;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +12,15 @@ using System.Windows;
 
 namespace Inventory.ViewModels
 {
-    partial class AddDeviceViewModel : ViewModelBase
+    public partial class RestockOrUnloadViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceStore _deviceStore = null!;
         private readonly DeviceTransactionStore _deviceTransactionStore = null!;
-
+        private readonly DeviceDto _deviceDto;
+        [ObservableProperty]
+        private List<string> _operations = new()
+        { "Restock", "Unload" };
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
@@ -30,43 +32,52 @@ namespace Inventory.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
-        private int _quantity;
+        private int _operation;
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
+        private int _quantity = 1;
 
-        public AddDeviceViewModel(NavigationStore navigationStore)
+        public RestockOrUnloadViewModel(NavigationStore navigationStore, DeviceDto deviceDto)
         {
             _deviceStore = new();
             _deviceTransactionStore = new();
+            _deviceDto = deviceDto;
             _navigationStore = navigationStore;
             SubmitCommand = new AsyncRelayCommand(Submit, CanSubmit);
-        }
 
+            _deviceName = deviceDto.DeviceName;
+        }
 
         public IAsyncRelayCommand SubmitCommand { get; }
         private async Task Submit()
         {
-
+            var isSuccess = false;
             if (!ValidateInputs())
             {
                 return;
             }
 
-            var device = new Device()
+            if(_operation == 0)
             {
-                DeviceName = _deviceName,
-            };
-
-            bool isSuccess = await _deviceStore.AddDevice(device, _quantity, _user);
+                isSuccess = await _deviceStore.RestockDevice(_quantity, _deviceDto.Id, _user);
+            } 
+            
+            else
+            {
+                isSuccess = await _deviceStore.UnloadDevice(_deviceDto.Id, _user);
+            }
 
             if(isSuccess)
             {
                 Cancel();
+                return;
             }
         }
 
         private bool CanSubmit()
         {
-            return !string.IsNullOrEmpty(_user) && !string.IsNullOrEmpty(_deviceName) && _quantity > 0;
+            return !string.IsNullOrEmpty(_user) && !string.IsNullOrEmpty(_deviceName) && !string.IsNullOrEmpty(_operations[_operation]) && !(_quantity < 1);
         }
 
         [RelayCommand]
@@ -83,9 +94,9 @@ namespace Inventory.ViewModels
                 return false;
             }
 
-            if (_quantity < 0)
+            if (_quantity <= 0)
             {
-                MessageBox.Show("Quantity must be greater than 0.");
+                MessageBox.Show("Quantity must be greater than zero.");
                 return false;
             }
 

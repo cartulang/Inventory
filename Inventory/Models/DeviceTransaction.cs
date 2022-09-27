@@ -8,6 +8,8 @@ namespace Inventory.Models
         public int Id { get; set; }
         public int DeviceId { get; set; }
         public int OperationId { get; set; }
-        public string Date { get; set; } = null!;
+        public int Quantity { get; set; }
+        public string CurrentUser { get; set; } = null!;
+        public string TransactionDate { get; set; } = null!;
     }
 }

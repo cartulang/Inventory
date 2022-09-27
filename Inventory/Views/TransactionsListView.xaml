@@ -15,9 +15,9 @@
         <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding Transactions}" IsReadOnly="True" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Device" Binding="{Binding DeviceName}"   />
-                <DataGridTextColumn Header="Last User" Binding="{Binding LastUser}"   />
+                <DataGridTextColumn Header="User" Binding="{Binding CurrentUser}"   />
                 <DataGridTextColumn Header="Operation"  Binding="{Binding Operation}" />
-                <DataGridTextColumn Header="Date"  Binding="{Binding Date}"   />
+                <DataGridTextColumn Header="Date"  Binding="{Binding TransactionDate}"   />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

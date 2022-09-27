@@ -23,29 +23,36 @@ namespace Inventory.Store
             return await Task.Run(_deviceService.GetAllDevice);
         }
 
-        public Device GetDevice(int deviceId)
+        public async Task<bool> AddDevice(Device device, int quantity, string user)
         {
-            return _deviceService.GetDevice(deviceId).Result;
+            return await _deviceService.AddDevice(device, quantity, user);
         }
 
-        public async Task<bool> AddDevice(Device device)
+        
+
+        public async Task<bool> WithdrawDevice(DeviceDto deviceDto, int quantity, string user)
         {
-            return await _deviceService.AddDevice(device);
+            return await Task.Run(() => _deviceService.WithdrawDevice(deviceDto, quantity, user));
         }
 
-        public async Task<bool> WithdrawDevice(DeviceDto deviceDto, int quantity)
+        public async Task<bool> ReturnDevice(DeviceDto deviceDto, int quantity, string user)
         {
-            return await Task.Run(() => _deviceService.WithdrawDevice(deviceDto, quantity));
-        }
-
-        public async Task<bool> ReturnDevice(DeviceDto deviceDto, int quantity)
-        {
-            return await Task.Run(() => _deviceService.ReturnDevice(deviceDto, quantity));
+            return await Task.Run(() => _deviceService.ReturnDevice(deviceDto, quantity, user));
         }
 
         public async Task<IEnumerable<DeviceDto>> DeleteDevice(int deviceId)
         {
              return await _deviceService.DeleteDevice(deviceId);
+        }
+
+        public async Task<bool> RestockDevice(int quantity, int deviceId, string user)
+        {
+            return await _deviceService.RestockDevice(quantity, deviceId, user);
+        }
+
+        public async Task<bool> UnloadDevice(int deviceId, string user)
+        {
+            return await _deviceService.UnloadDevice(deviceId, user);
         }
     }
 }

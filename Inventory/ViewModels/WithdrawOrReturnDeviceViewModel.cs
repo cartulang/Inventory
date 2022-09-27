@@ -19,11 +19,15 @@ namespace Inventory.ViewModels
         private readonly DeviceTransactionStore _deviceTransactionStore = null!;
 
         [ObservableProperty]
-        private List<string> _operation = new()
+        private List<string> _operations = new()
         { "Withdraw", "Return" };
 
         [ObservableProperty]
-        private int _selectedOperation;
+        private int _selectedOperation = 0;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(WithdrawOrReturnCommand))]
+        private string _user = null!;
 
         [ObservableProperty]
         private string _deviceName = null!;
@@ -40,7 +44,7 @@ namespace Inventory.ViewModels
             _deviceStore = new();
             _deviceTransactionStore = new();
             _deviceName = deviceDto.DeviceName;
-            WithdrawOrReturnCommand = new AsyncRelayCommand(WithdrawOrReturnDevice);
+            WithdrawOrReturnCommand = new AsyncRelayCommand(WithdrawOrReturnDevice, CanSubmit);
         }
 
         private async Task WithdrawOrReturnDevice()
@@ -49,12 +53,12 @@ namespace Inventory.ViewModels
 
             if(_selectedOperation == 0)
             {
-                isSuccess = await _deviceStore.WithdrawDevice(_deviceDto, _quantity);
+                isSuccess = await _deviceStore.WithdrawDevice(_deviceDto, _quantity, _user);
             } 
             
             else
             { 
-                isSuccess = await _deviceStore.ReturnDevice(_deviceDto, _quantity);
+                isSuccess = await _deviceStore.ReturnDevice(_deviceDto, _quantity, _user);
             }
 
             if (isSuccess)
@@ -68,6 +72,11 @@ namespace Inventory.ViewModels
         private void Cancel()
         {
             _navigationStore.CurrentViewModel = new DeviceListViewModel(_navigationStore);
+        }
+
+        private bool CanSubmit()
+        {
+            return _quantity > 0 && !string.IsNullOrEmpty(_user);
         }
     }
 }

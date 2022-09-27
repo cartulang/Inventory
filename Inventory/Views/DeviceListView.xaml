@@ -21,8 +21,8 @@
                 <Button Grid.Column="0" HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Command="{Binding ToHomeCommand}">Home</Button>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding DeleteDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0">Delete</Button>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToUpdateDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0">Return/Withdraw</Button>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding RestockCommand}" Margin="0,0,10,0">Restock</Button>
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToWithdrawOrReturnDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0">Return/Withdraw</Button>
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToRestockOrUnloadCommand}" Margin="0,0,10,0">Restock/Unload</Button>
                     <Button Command="{Binding ToAddDeviceCommand}">New</Button>
                 </StackPanel>
             </Grid>
@@ -31,7 +31,7 @@
                     <DataGridTextColumn Header="Device" Binding="{Binding DeviceName}"  />
                     <DataGridTextColumn Header="Available"  Binding="{Binding Available}" Width="100"  />
                     <DataGridTextColumn Header="In Use"  Binding="{Binding InUse}" Width="100"  />
-                    <DataGridTextColumn Header="Defective"  Binding="{Binding Defective}" Width="100"  />
+                    <!--<DataGridTextColumn Header="Defective"  Binding="{Binding Defective}" Width="100"  /> -->
                     <DataGridTextColumn Header="Total"  Binding="{Binding Total}" Width="100"  />
                 </DataGrid.Columns>
             </DataGrid>

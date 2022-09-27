@@ -26,7 +26,8 @@ namespace Inventory.ViewModels
         private ObservableCollection<DeviceDto> _deviceList = null!;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ToUpdateDeviceCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToWithdrawOrReturnDeviceCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToRestockOrUnloadCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteDeviceCommand))]
         private DeviceDto _selectedDevice = null!;
 
@@ -36,10 +37,13 @@ namespace Inventory.ViewModels
             _deviceList = new();
             _deviceTransactionStore = new();
             _navigationStore = navigationStore;
+            DeleteDeviceCommand = new AsyncRelayCommand(DeleteDevice, CanRestockOrDeleteDevice);
             bgWork.DoWork += FetchDeviceList;
             bgWork.RunWorkerCompleted += DoneFetching;
             bgWork.RunWorkerAsync();
         }
+
+        public IAsyncRelayCommand DeleteDeviceCommand { get; }
 
         [RelayCommand]
         private void ToAddDevice()
@@ -53,21 +57,29 @@ namespace Inventory.ViewModels
             _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
         }
 
-        [RelayCommand(CanExecute = nameof(CanUpdateOrDeleteDevice))]
-        private void ToUpdateDevice()
+        [RelayCommand(CanExecute = nameof(CanRestockOrDeleteDevice))]
+        private void ToRestockOrUnload()
+        {
+            _navigationStore.CurrentViewModel = new RestockOrUnloadViewModel(_navigationStore, _selectedDevice);
+        }
+
+        [RelayCommand(CanExecute = nameof(CanWithdrawOrReturnDevice))]
+        private void ToWithdrawOrReturnDevice()
         {
             _navigationStore.CurrentViewModel = new WithdrawOrReturnDeviceViewModel(_navigationStore, _selectedDevice);
         }
-
-        [RelayCommand(CanExecute = nameof(CanUpdateOrDeleteDevice))]
-        private void DeleteDevice()
+        private async Task DeleteDevice()
         {
-            _allDevice = _deviceStore.DeleteDevice(_selectedDevice.Id).Result;
+            _allDevice = await _deviceStore.DeleteDevice(_selectedDevice.Id);
             _deviceList.Clear();
             ToDeviceList();
         }
 
-        private bool CanUpdateOrDeleteDevice() => _selectedDevice is not null;
+        private bool CanRestockOrDeleteDevice() => _selectedDevice is not null;
+        private bool CanWithdrawOrReturnDevice()
+        {
+            return _selectedDevice is not null && _selectedDevice.Total > 0;
+        }
         private void DoneFetching(object? sender, RunWorkerCompletedEventArgs e)
         {
             ToDeviceList();

@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel Height="300" Width="200">
             <Button Command="{Binding ToDeviceListCommand}">Devices</Button>
-            <!--   <Button Style="{DynamicResource MaterialDesignFlatButton}" Margin="0, 20"  Command="{Binding ToTransactionsCommand}">Transactions</Button> -->
+            <Button Style="{DynamicResource MaterialDesignFlatButton}" Margin="0, 20"  Command="{Binding ToTransactionsCommand}">Transactions</Button>
             <Button Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding LogoutCommand}">Logout</Button>
         </StackPanel>
     </Grid>
