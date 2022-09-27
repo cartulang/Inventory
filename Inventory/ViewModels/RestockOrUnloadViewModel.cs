@@ -22,9 +22,6 @@ namespace Inventory.ViewModels
         private List<string> _operations = new()
         { "Restock", "Unload" };
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
-        private string _user = null!;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
@@ -60,12 +57,12 @@ namespace Inventory.ViewModels
 
             if(_operation == 0)
             {
-                isSuccess = await _deviceStore.RestockDevice(_quantity, _deviceDto.Id, _user);
+                isSuccess = await _deviceStore.RestockDevice(_quantity, _deviceDto.Id, UserStore.UserName);
             } 
             
             else
             {
-                isSuccess = await _deviceStore.UnloadDevice(_deviceDto.Id, _user);
+                isSuccess = await _deviceStore.UnloadDevice(_deviceDto.Id, UserStore.UserName);
             }
 
             if(isSuccess)
@@ -77,7 +74,7 @@ namespace Inventory.ViewModels
 
         private bool CanSubmit()
         {
-            return !string.IsNullOrEmpty(_user) && !string.IsNullOrEmpty(_deviceName) && !string.IsNullOrEmpty(_operations[_operation]) && !(_quantity < 1);
+            return !string.IsNullOrEmpty(_deviceName) && !string.IsNullOrEmpty(_operations[_operation]) && !(_quantity < 1);
         }
 
         [RelayCommand]

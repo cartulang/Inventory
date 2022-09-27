@@ -40,10 +40,8 @@ namespace Inventory.ViewModels
             };
 
             var isLoginSuccess = await _userStore.Login(user);
-
             if(isLoginSuccess)
             {
-                UserStore.IsLoggedIn = true;
                 _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
             }
         }

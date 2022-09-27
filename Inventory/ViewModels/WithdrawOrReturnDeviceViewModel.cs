@@ -25,9 +25,6 @@ namespace Inventory.ViewModels
         [ObservableProperty]
         private int _selectedOperation = 0;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(WithdrawOrReturnCommand))]
-        private string _user = null!;
 
         [ObservableProperty]
         private string _deviceName = null!;
@@ -53,12 +50,12 @@ namespace Inventory.ViewModels
 
             if(_selectedOperation == 0)
             {
-                isSuccess = await _deviceStore.WithdrawDevice(_deviceDto, _quantity, _user);
+                isSuccess = await _deviceStore.WithdrawDevice(_deviceDto, _quantity, UserStore.UserName);
             } 
             
             else
             { 
-                isSuccess = await _deviceStore.ReturnDevice(_deviceDto, _quantity, _user);
+                isSuccess = await _deviceStore.ReturnDevice(_deviceDto, _quantity, UserStore.UserName);
             }
 
             if (isSuccess)
@@ -76,7 +73,7 @@ namespace Inventory.ViewModels
 
         private bool CanSubmit()
         {
-            return _quantity > 0 && !string.IsNullOrEmpty(_user);
+            return _quantity > 0;
         }
     }
 }

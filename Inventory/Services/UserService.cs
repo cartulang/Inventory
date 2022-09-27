@@ -20,14 +20,14 @@ namespace Inventory.Services
         }
 
 
-        public async Task<bool> Login(User user)
+        public async Task<User> Login(User user)
         {
             try
             {
                 if(user.Username == null || user.Password == null)
                 {
                     MessageBox.Show("All fields are required.");
-                    return false;
+                    return new User();
                 }
 
                 var userMatch = await _context.Users.FirstAsync(u => u.Username == user.Username);
@@ -35,22 +35,22 @@ namespace Inventory.Services
                 if(userMatch == null)
                 {
                     MessageBox.Show("Username or password does not exist.");
-                    return false;
+                    return new User();
                 }
 
                 if(userMatch.Password != user.Password)
                 {
                     MessageBox.Show("Username or Password does not match.");
-                    return false;
+                    return new User();
                 }
 
-                return true;
+                return userMatch;
             }
 
             catch(Exception)
             {
                 MessageBox.Show("Error while logging in.");
-                return false;
+                return new User();
             }
         }
     }

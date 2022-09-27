@@ -10,8 +10,6 @@
         <StackPanel Width="200">
             <Label>Device name</Label>
             <TextBox Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-            <Label>User</Label>
-            <TextBox Text="{Binding User, UpdateSourceTrigger=PropertyChanged}" />
             <Label>Operation</Label>
             <ComboBox ItemsSource="{Binding Operations}" SelectedIndex="{Binding Operation, UpdateSourceTrigger=PropertyChanged}" />
             <Label>Quantity</Label>

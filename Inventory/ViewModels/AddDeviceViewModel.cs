@@ -22,15 +22,11 @@ namespace Inventory.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
-        private string _user = null!;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
         private string _deviceName = null!;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SubmitCommand))]
-        private int _quantity;
+        private int _quantity = 1;
 
 
         public AddDeviceViewModel(NavigationStore navigationStore)
@@ -56,7 +52,7 @@ namespace Inventory.ViewModels
                 DeviceName = _deviceName,
             };
 
-            bool isSuccess = await _deviceStore.AddDevice(device, _quantity, _user);
+            bool isSuccess = await _deviceStore.AddDevice(device, _quantity, UserStore.UserName);
 
             if(isSuccess)
             {
@@ -66,7 +62,7 @@ namespace Inventory.ViewModels
 
         private bool CanSubmit()
         {
-            return !string.IsNullOrEmpty(_user) && !string.IsNullOrEmpty(_deviceName) && _quantity > 0;
+            return  !string.IsNullOrEmpty(_deviceName) && _quantity > 0;
         }
 
         [RelayCommand]

@@ -20,10 +20,14 @@ namespace Inventory.ViewModels
         private readonly NavigationStore _navigationStore = null!;
         private readonly DeviceStore _deviceStore = null!;
         private readonly DeviceTransactionStore _deviceTransactionStore = null!;
+        private readonly UserStore _userStore = null!;
         private IEnumerable<DeviceDto> _allDevice = null!;
 
         [ObservableProperty]
         private ObservableCollection<DeviceDto> _deviceList = null!;
+
+        [ObservableProperty]
+        private bool _isAdmin;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToWithdrawOrReturnDeviceCommand))]
@@ -37,6 +41,7 @@ namespace Inventory.ViewModels
             _deviceList = new();
             _deviceTransactionStore = new();
             _navigationStore = navigationStore;
+            _isAdmin = UserStore.IsAdmin;
             DeleteDeviceCommand = new AsyncRelayCommand(DeleteDevice, CanRestockOrDeleteDevice);
             bgWork.DoWork += FetchDeviceList;
             bgWork.RunWorkerCompleted += DoneFetching;

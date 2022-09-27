@@ -12,10 +12,12 @@ namespace Inventory.ViewModels
     public partial class HomeViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore = null!;
+        private readonly UserStore _userStore = null!;
 
         public HomeViewModel(NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
+            _userStore = new();
         }
 
         [RelayCommand]
@@ -33,8 +35,8 @@ namespace Inventory.ViewModels
         [RelayCommand]
         private void Logout()
         {
-            UserStore.IsLoggedIn = false;
-            _navigationStore.CurrentViewModel = new LoginViewModel(_navigationStore);
+           _userStore.Logout();
+           _navigationStore.CurrentViewModel = new LoginViewModel(_navigationStore);
         }
     }
 }

@@ -7,6 +7,9 @@
              xmlns:viewmodels="clr-namespace:Inventory.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:DeviceListViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="IsAdmin" />
+    </UserControl.Resources>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -20,10 +23,10 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Command="{Binding ToHomeCommand}">Home</Button>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding DeleteDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0">Delete</Button>
+                    <Button Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding DeleteDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0" Visibility="{Binding IsAdmin, Mode=TwoWay, Converter={StaticResource IsAdmin}}">Delete</Button>
                     <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToWithdrawOrReturnDeviceCommand}" CommandParameter="{Binding SelectedDevice}" Margin="10,0">Return/Withdraw</Button>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToRestockOrUnloadCommand}" Margin="0,0,10,0">Restock/Unload</Button>
-                    <Button Command="{Binding ToAddDeviceCommand}">New</Button>
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding ToRestockOrUnloadCommand}" Margin="0,0,10,0" Visibility="{Binding IsAdmin, Mode=TwoWay, Converter={StaticResource IsAdmin}}">Restock/Unload</Button>
+                    <Button Command="{Binding ToAddDeviceCommand}" Visibility="{Binding IsAdmin, Mode=TwoWay, Converter={StaticResource IsAdmin}}">New</Button>
                 </StackPanel>
             </Grid>
             <DataGrid Grid.Row="1" AutoGenerateColumns="False" ItemsSource="{Binding DeviceList}" IsReadOnly="True" SelectedItem="{Binding SelectedDevice, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
@@ -31,7 +34,6 @@
                     <DataGridTextColumn Header="Device" Binding="{Binding DeviceName}"  />
                     <DataGridTextColumn Header="Available"  Binding="{Binding Available}" Width="100"  />
                     <DataGridTextColumn Header="In Use"  Binding="{Binding InUse}" Width="100"  />
-                    <!--<DataGridTextColumn Header="Defective"  Binding="{Binding Defective}" Width="100"  /> -->
                     <DataGridTextColumn Header="Total"  Binding="{Binding Total}" Width="100"  />
                 </DataGrid.Columns>
             </DataGrid>
